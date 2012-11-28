@@ -1,0 +1,7 @@
+name = AxiaCore Base
+description = AxiaCore base module
+core = 7.x
+package = AxiaCore
+version = 7.x-1.0
+project = ax_base
+dependencies[] =  toolbar

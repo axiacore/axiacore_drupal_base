@@ -1,0 +1,85 @@
+<?php
+/**
+ * This module implements a set of hooks and custom functions
+ * for AxiaCore web applications.
+ *
+ */
+
+
+
+function ax_base_init()
+{
+    global $theme, $user;
+    $module_path = drupal_get_path('module', 'ax_base');
+
+    if (user_is_logged_in()) {
+        drupal_add_js('//assets.zendesk.com/external/zenbox/v2.5/zenbox.js', 'external');
+        drupal_add_css('//assets.zendesk.com/external/zenbox/v2.5/zenbox.css', array(
+            'type'  =>  'external',
+            'media' =>  'screen, projection'
+            )
+        );
+
+        $script = ax_base_build_javascript($user);
+        drupal_add_js($script, 'inline');
+    }
+}
+
+
+function ax_base_build_javascript($user)
+{
+    $script = sprintf(
+    "jQuery(function() {
+        var z_box = '';
+        var z_username = '%s';
+        var z_email = '%s';
+
+        var z_link = document.createElement('a');
+        z_link.href = 'http://axiacore.zendesk.com/account/dropboxes/' + z_box;
+        z_link.onclick = function () { Zenbox.show(); return false; };
+        z_link.innerHTML = 'Soporte AxiaCore';
+
+        var z_container = document.createElement('li');
+        document.getElementById('toolbar-user').appendChild(z_container).appendChild(z_link);
+
+        if (typeof(Zenbox) !== 'undefined') {
+                Zenbox.init({
+                dropboxID:   z_box,
+                url:         'https://axiacore.zendesk.com',
+                tabID:       'Soporte',
+                tabColor:    'black',
+                tabPosition: 'Left',
+                requester_name: z_username,
+                requester_email: z_email,
+                hide_tab:    'true'
+            });
+        }
+    });", $user->name, $user->mail);
+
+    return $script;
+}
+
+/**
+ * Implementation of hook_menu_alter to override some core
+ * urls
+ *
+ */
+
+function ax_base_menu_alter(&$items)
+{
+    if (isset($items['user'])) {
+        $items['user']['theme callback'] = 'ax_base_get_admin_theme';
+        $items['user/login']['theme callback'] = 'ax_base_get_admin_theme';
+    }
+}
+
+
+/**
+ * Seven is the default admin theme
+ *
+ */
+
+function ax_base_get_admin_theme()
+{
+    return 'seven';
+}

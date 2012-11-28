@@ -30,7 +30,7 @@ function ax_base_build_javascript($user)
 {
     $script = sprintf(
     "jQuery(function() {
-        var z_box = '';
+        var z_box = '%s';
         var z_username = '%s';
         var z_email = '%s';
 
@@ -54,7 +54,7 @@ function ax_base_build_javascript($user)
                 hide_tab:    'true'
             });
         }
-    });", $user->name, $user->mail);
+    });", variable_get('support_axiacore', ''), $user->name, $user->mail);
 
     return $script;
 }
@@ -83,3 +83,66 @@ function ax_base_get_admin_theme()
 {
     return 'seven';
 }
+
+
+/**
+ * Implementación del hook menu
+ */
+
+function ax_base_menu()
+{
+    $items = array();
+
+    $items['admin/config/user-interface/soporte-axiacore'] = array(
+        'title' => 'Soporte Axiacore',
+        'description' => 'Configuración del soporte de Axiacore.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('soporte_axiacore'),
+        'access arguments' => array('administer modules'),
+    );
+
+    return $items;
+}
+
+
+/**
+ * Implementación del hook_theme
+ */
+
+function ax_base_theme()
+{
+    return array(
+        'soporte_axiacore' => array(
+            'render element' => 'form',
+        ),
+    );
+}
+
+function soporte_axiacore($form)
+{
+    $form['support'] = array(
+        '#type'         =>  'textfield',
+        '#title'        =>  t('id'),
+        '#description'  =>  'Ingrese el identificador del soporte',
+        '#size'         =>  60,
+        '#maxlength'    =>  40,
+        '#required'     =>  TRUE,
+        '#default_value'=>  variable_get('support_axiacore', '')
+    );
+
+    $form['submit'] = array(
+        '#type'         =>  'submit',
+        '#value'        =>  'Guardar',
+        '#action'       =>  'admin/config/user-interface'
+    );
+
+    return $form;
+}
+
+function soporte_axiacore_submit($form, &$formState)
+{
+    $idSupport = $formState['values']['support'];
+    variable_set('support_axiacore', $idSupport);
+    $formState['redirect'] = 'admin/config/user-interface';
+}
+

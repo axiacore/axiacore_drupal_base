@@ -54,7 +54,7 @@ function ax_base_build_javascript($user)
                 hide_tab:    'true'
             });
         }
-    });", variable_get('support_axiacore', ''), $user->name, $user->mail);
+    });", variable_get('ax_support_token', ''), $user->name, $user->mail);
 
     return $script;
 }
@@ -96,7 +96,7 @@ function ax_base_menu()
         'title'            =>  t('Axiacore Support'),
         'description'      =>  t('Setting of the Axiacore Support.'),
         'page callback'    =>  'drupal_get_form',
-        'page arguments'   =>  array('soporte_axiacore'),
+        'page arguments'   =>  array('ax_base_support_config'),
         'access arguments' =>  array('administer modules'),
     );
 
@@ -117,7 +117,7 @@ function ax_base_theme()
     );
 }
 
-function soporte_axiacore($form)
+function ax_base_support_config($form)
 {
     $form['support'] = array(
         '#type'         =>  'textfield',
@@ -138,10 +138,10 @@ function soporte_axiacore($form)
     return $form;
 }
 
-function soporte_axiacore_submit($form, &$formState)
+function ax_base_support_config_submit($form, &$formState)
 {
     $idSupport = $formState['values']['support'];
-    variable_set('support_axiacore', $idSupport);
+    variable_set('ax_support_token', $idSupport);
     drupal_set_message(t('Configuration has been saved'));
     $formState['redirect'] = 'admin/config/user-interface';
 }

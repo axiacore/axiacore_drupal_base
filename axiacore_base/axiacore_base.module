@@ -7,7 +7,7 @@
 
 
 
-function ax_base_init()
+function axicore_base_init()
 {
     global $theme, $user;
     $module_path = drupal_get_path('module', 'ax_base');
@@ -26,7 +26,7 @@ function ax_base_init()
 }
 
 
-function ax_base_build_javascript($user)
+function axicore_base_build_javascript($user)
 {
     $script = sprintf(
     "jQuery(function() {
@@ -54,7 +54,7 @@ function ax_base_build_javascript($user)
                 hide_tab:    'true'
             });
         }
-    });", variable_get('support_axiacore', ''), $user->name, $user->mail);
+    });", variable_get('support_axiacore_id', ''), $user->name, $user->mail);
 
     return $script;
 }
@@ -65,7 +65,7 @@ function ax_base_build_javascript($user)
  *
  */
 
-function ax_base_menu_alter(&$items)
+function axicore_base_menu_alter(&$items)
 {
     if (isset($items['user'])) {
         $items['user']['theme callback'] = 'ax_base_get_admin_theme';
@@ -79,7 +79,7 @@ function ax_base_menu_alter(&$items)
  *
  */
 
-function ax_base_get_admin_theme()
+function axicore_base_get_admin_theme()
 {
     return 'seven';
 }
@@ -88,7 +88,7 @@ function ax_base_get_admin_theme()
  * Implementación del hook menu
  */
 
-function ax_base_menu()
+function axiacore_base_menu()
 {
     $items = array();
 
@@ -108,7 +108,7 @@ function ax_base_menu()
  * Implementación del hook_theme
  */
 
-function ax_base_theme()
+function axiacore_base_theme()
 {
     return array(
         'soporte_axiacore' => array(
